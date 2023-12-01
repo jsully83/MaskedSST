@@ -1,11 +1,11 @@
-dataset: dfc
+dataset: hypso
 image_size: 8
 patch_size: 1
 band_patch_size: 10
 batch_size: 2
 val_batch_size: 2
 data_fraction: 1.
-train_fraction: 0.8 # determines what percentage of files are used for training, remainder for val
+train_fraction: 0.8
 
 ignored_label: -1
 logging_freq: 10
@@ -24,7 +24,7 @@ shifting_window: False
 epoch: 100
 max_steps: 1000
 
-linear_eval: False # if true only trains MLP head, default should be False
+linear_eval: False
 lr: 0.0005
 mlp_head_lr: 0.005
 weight_decay: 0.005

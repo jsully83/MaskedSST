@@ -15,6 +15,12 @@ data:
     n_bands: 50 # the 48 bands are zero padded to 50 for division into spectral tokens of size 10
     remove_bands: []
     n_classes: 20
+  hypso:
+    train_path:
+    train_label_path:
+    n_bands: 120
+    remove_bands: []
+    n_classes: 3
 transformer:
   transformer_dim: 96 #512,
   transformer_depth: 4 #8,
