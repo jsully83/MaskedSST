@@ -191,6 +191,7 @@ def get_supervised_data(config, device):
             fix_train_patches=False,
             pixelwise=config.pixelwise,
             rgb_only=config.rgb_only,
+            target_type="labeled"
         )
     elif config.dataset == "hypso":
         dataset = HypsoDataset(
@@ -201,6 +202,7 @@ def get_supervised_data(config, device):
             patch_size=config.patch_size,
             test=False,
             rgb_only=config.rgb_only,
+            target_type="labeled"
         )
 
     num_train_samples = int(
@@ -300,6 +302,7 @@ def load_checkpoint(config, model, classifier_name, device):
 
     encoder_weights = checkpoint["model_state_dict"]
     for k in list(encoder_weights.keys()):
+        # renames the keys from encoder.key to key
         encoder_weights[k.replace("encoder.", "")] = encoder_weights[k]
 
         # delete old keys and those that are not part of the encoder
