@@ -19,12 +19,11 @@ from tqdm import tqdm
 import warnings
 
 labels = {
-    0: "Sea", 
-    1: "Land", 
+    0: "Ground",
     2: "Cloud"
 }
 
-classes = list(range(3))
+classes = [list(range(2))] # not sure if this should be [0, 2] instead?
 
 wavelengths = np.linspace(400, 800, num=120).tolist()
 

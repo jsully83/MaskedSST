@@ -20,7 +20,7 @@ data:
     train_label_path: C:/Users/akuru/Documents/ECEE 7370 Advanced Comp Vision/sea_cloud_land/gt_tiles
     n_bands: 120
     remove_bands: []
-    n_classes: 3
+    n_classes: 2
 transformer:
   transformer_dim: 96 #512,
   transformer_depth: 4 #8,
