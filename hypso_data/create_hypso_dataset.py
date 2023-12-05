@@ -11,18 +11,34 @@ from shapely.ops import transform
 
 TILE_SIZE = 64
 UPSCALE_FACTOR_HYPSO = 1  # 3 for 10m resolution with bilinear
+type = "labeled" #choices are labeled or unlabeled
 
 HYPSO_PATH = "C:/Users/akuru/Documents/ECEE 7370 Advanced Comp Vision/sea_cloud_land/1-DATA WITH GROUND-TRUTH LABELS"
-OUTPUT_DIR = "C:/Users/akuru/Documents/ECEE 7370 Advanced Comp Vision/sea_cloud_land/tiles"
+
+if type == "labeled":
+    OUTPUT_DIR = "C:/Users/akuru/Documents/ECEE 7370 Advanced Comp Vision/sea_cloud_land/gt_tiles"
+else:
+    OUTPUT_DIR = "C:/Users/akuru/Documents/ECEE 7370 Advanced Comp Vision/sea_cloud_land/tiles"
 
 
 if __name__ == "__main__":
     wgs84 = pyproj.CRS("EPSG:4326")
 
+    # hypso_products = [
+    #     x
+    #     for x in glob.glob(os.path.join(HYPSO_PATH, "*", "DATA", "*radiance.tif"))
+        
+    # ]
+    if type == "labeled":
+        ending = "*hypso_gt.tif"
+        folder = "GROUND-TRUTH LABELS"
+    else:
+        ending = "*radiance.tif"
+        folder = "DATA"
+
     hypso_products = [
         x
-        for x in glob.glob(os.path.join(HYPSO_PATH, "*", "DATA", "*radiance.tif"))
-        
+        for x in glob.glob(os.path.join(HYPSO_PATH, "*", folder, ending))
     ]
     
     print(f"Found {len(hypso_products)} HYPSO1 products")
@@ -35,9 +51,18 @@ if __name__ == "__main__":
     #     testfiles = [x.strip() for x in f.readlines()]
 
     for hypso_product in hypso_products:
-        idx = hypso_product.index("\\DATA")
-        filename = hypso_product[idx+6:]
-        filename = filename.split("/")[-1].split(".tif")[0]
+        if type == "labeled":
+            index_str = "\\GROUND-TRUTH LABELS"
+            idx = hypso_product.index(index_str)
+            filename = hypso_product[idx+21:]
+            filename = filename.split("/")[-1].split("-hypso_gt.tif")[0]
+        else:
+            index_str = "\\DATA"
+            idx = hypso_product.index(index_str)
+            filename = hypso_product[idx+6:]
+            filename = filename.split("/")[-1].split("-radiance.tif")[0]
+        
+       
         outdir = os.path.join(OUTPUT_DIR, filename)
 
         # if filename in testfiles:
@@ -91,11 +116,17 @@ if __name__ == "__main__":
 
         if save:
             for idx, tile in tqdm(enumerate(tiles), total=len(tiles)):
+                if type == "labeled":
+                    outstr = f"tile{idx}_hypso_gt.tif"
+                else:
+                    outstr = f"tile{idx}_hypso.tif"
+
+                no_data = -32768.0 if tile.dtype==int else 10
                 with rasterio.open(
-                    os.path.join(outdir, f"tile{idx}_hypso.tif"),
+                    os.path.join(outdir, outstr),
                     "w",
                     driver="GTiff",
-                    nodata=-32768.0,
+                    nodata=no_data,
                     dtype=tile.dtype,
                     count=tile.shape[0],
                     width=tile.shape[2],

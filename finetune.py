@@ -7,7 +7,7 @@ os.environ["MKL_NUM_THREADS"] = "4"  # export MKL_NUM_THREADS=6
 os.environ["VECLIB_MAXIMUM_THREADS"] = "4"  # export VECLIB_MAXIMUM_THREADS=4
 os.environ["NUMEXPR_NUM_THREADS"] = "4"  # export NUMEXPR_NUM_THREADS=6
 os.environ["GDAL_NUM_THREADS"] = "4"
-
+os.environ['PATH'] = "C:/Users/akuru/anaconda3/envs/methaneair/Library/bin;" + os.environ['PATH']
 import sys
 import random
 
@@ -39,8 +39,8 @@ torch.backends.cudnn.deterministic = True
 
 if __name__ == "__main__":
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-    dataset_name = sys.argv[1]
-    valid_datasets = ["enmap", "houston2018"]
+    dataset_name = "hypso" #sys.argv[1]
+    valid_datasets = ["enmap", "houston2018", "hypso"]
     assert (
         dataset_name in valid_datasets
     ), f"Please provide a valid dataset name from {valid_datasets}, provided: {dataset_name=}"
@@ -152,7 +152,9 @@ if __name__ == "__main__":
 
     dataloader, val_dataloader = get_supervised_data(config, device)
 
-    os.mkdir(f"models/{config.run_id}/")
+    model_path = "C:/Users/akuru/Documents/ECEE 7370 Advanced Comp Vision/final_project/MaskedSST/" + f"{config.run_id}/"
+    os.mkdir(model_path)
+    #os.mkdir(f"{config.run_id}/")
 
     losses = []
     accs = []

@@ -29,8 +29,15 @@ from src.data_houston2018 import (
     StandardizeHouston2018,
     Houston2018LabelTransform,
 )
+
+from src.data_hypso import (
+    HypsoDataset,
+    StandardizeHypso,
+    HypsoLabelTransform,
+)
 from src.data_enmap import wavelengths as enmaps_waves
 from src.data_houston2018 import wavelengths as houston_waves
+from src.data_hypso import wavelengths as hypso_waves
 
 
 def get_optimizers(model, config):
@@ -148,6 +155,10 @@ def get_supervised_data(config, device):
         train_label_path = config.train_label_path
         standardizer = StandardizeHouston2018()
         label_transform = Houston2018LabelTransform()
+    elif config.dataset == "hypso":
+        train_label_path = config.train_label_path
+        standardizer = StandardizeHypso()
+        label_transform = HypsoLabelTransform()
 
     transforms = torchvision.transforms.Compose(
         [
@@ -180,6 +191,18 @@ def get_supervised_data(config, device):
             fix_train_patches=False,
             pixelwise=config.pixelwise,
             rgb_only=config.rgb_only,
+            target_type="labeled"
+        )
+    elif config.dataset == "hypso":
+        dataset = HypsoDataset(
+            train_path,
+            train_label_path,
+            transforms,
+            label_transform,
+            patch_size=config.patch_size,
+            test=False,
+            rgb_only=config.rgb_only,
+            target_type="labeled"
         )
 
     num_train_samples = int(
@@ -279,6 +302,7 @@ def load_checkpoint(config, model, classifier_name, device):
 
     encoder_weights = checkpoint["model_state_dict"]
     for k in list(encoder_weights.keys()):
+        # renames the keys from encoder.key to key
         encoder_weights[k.replace("encoder.", "")] = encoder_weights[k]
 
         # delete old keys and those that are not part of the encoder
@@ -421,6 +445,12 @@ def get_spectral_pos_embedding(dataset, n_bands, band_patch_size):
         spectral_pos = get_pos_for_spectral_embedding(
             band_patch_size,
             houston_waves,
+            np.array(enmaps_waves)[~np.array(invalid_l2_bands)],
+        )
+    elif dataset == "hypso":
+        spectral_pos = get_pos_for_spectral_embedding(
+            band_patch_size,
+            hypso_waves, 
             np.array(enmaps_waves)[~np.array(invalid_l2_bands)],
         )
     else:
