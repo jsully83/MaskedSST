@@ -69,6 +69,7 @@ def get_optimizers(model, config):
 def get_unsupervised_data(config, device):
 
     train_path = config.train_path
+    print(train_path)
     if config.dataset == "enmap":
         label_transform = WorldCoverLabelTransform()
         standardizer = StandardizeEnMAP()
@@ -123,7 +124,8 @@ def get_unsupervised_data(config, device):
         ],
         generator=torch.Generator().manual_seed(config.seed),
     )
-
+    print(f'train size {len(train_dataset)}')
+    print(f'val size {len(val_dataset)}')
     dataloader = torch.utils.data.DataLoader(
         train_dataset,
         batch_size=config.batch_size,

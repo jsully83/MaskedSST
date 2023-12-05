@@ -12,28 +12,35 @@ from shapely.ops import transform
 TILE_SIZE = 64
 UPSCALE_FACTOR_ENMAP = 1  # 3 for 10m resolution with bilinear
 
-ENMAP_PATH = "/ds2/remote_sensing/enmap/"
-OUTPUT_DIR = "/ds2/remote_sensing/enmap_worldcover_dataset_v3/train/"
-TESTFILES = "/ds2/remote_sensing/enmap_worldcover_dataset/testfiles.txt"
+ENMAP_PATH = "/work/methaneai/MaskedSST/data/cv_data"
+OUTPUT_DIR = "/work/methaneai/MaskedSST/data/train/"
+TESTFILES = "/work/methaneai/MaskedSST/data/testfiles.txt"
 
 if __name__ == "__main__":
     wgs84 = pyproj.CRS("EPSG:4326")
 
     l2_product_dirs = [
         x
-        for x in glob.glob(os.path.join(ENMAP_PATH, "*", "*", "*", "*L2A-DT*"))
+        for x in glob.glob(os.path.join(ENMAP_PATH, "EN*", "EN*"))
         if os.path.isdir(x)
     ]
     l2_spectral_products = [
-        glob.glob(os.path.join(d, "*SPECTRAL_IMAGE.TIF"))[0] for d in l2_product_dirs
+        # glob.glob(os.path.join(ENMAP_PATH, "*SPECTRAL_IMAGE.TIF"))[0]
+        glob.glob(os.path.join(d, "*SPECTRAL_IMAGE-FULL.TIF"))[0] for d in l2_product_dirs
     ]
+
     l2_metadata = [
+        # glob.glob(os.path.join(ENMAP_PATH, "*METADATA.XML"))[0]
         glob.glob(os.path.join(d, "*METADATA.XML"))[0] for d in l2_product_dirs
     ]
     print(f"Found {len(l2_spectral_products)} EnMAP products.")
 
+    # for p in l2_spectral_products:
+    #     print(p)
     # make sure that there are no duplicate enmap files
     filenames = [x.split("/")[-1] for x in l2_spectral_products]
+    print(filenames)
+    print(len(filenames), len(set(filenames)))
     assert len(filenames) == len(set(filenames))
 
     with open(TESTFILES) as f:
@@ -98,7 +105,7 @@ if __name__ == "__main__":
                     os.path.join(outdir, f"tile{idx}_enmap.tif"),
                     "w",
                     driver="GTiff",
-                    nodata=-32768.0,
+                    nodata=0.00000001,
                     dtype=tile.dtype,
                     count=tile.shape[0],
                     width=tile.shape[2],

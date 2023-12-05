@@ -3,3 +3,6 @@ wandb/
 models/
 MaskedSST.egg-info/
 *.ipynb_checkpoints
+data/
+logs/
+models/
