@@ -78,7 +78,7 @@ if __name__ == "__main__":
 
     # set-up training run
     run = wandb.init(
-        project="enmap-mim-spatial-spectral", config=config, save_code=True
+        project="enmap-mim-spatial-spectral", config=config, save_code=True, resume=False
     )
     config.run_id = run.id
     wandb.config.update(config)

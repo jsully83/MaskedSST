@@ -39,8 +39,8 @@ torch.backends.cudnn.deterministic = True
 
 if __name__ == "__main__":
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-    dataset_name = sys.argv[1]
-    valid_datasets = ["enmap", "houston2018"]
+    dataset_name = "hypso" #sys.argv[1]
+    valid_datasets = ["enmap", "houston2018", "hypso"]
     assert (
         dataset_name in valid_datasets
     ), f"Please provide a valid dataset name from {valid_datasets}, provided: {dataset_name=}"
