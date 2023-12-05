@@ -504,6 +504,7 @@ class ViTSpatialSpectral(nn.Module):
         pos_embed = self.pos_embed.unsqueeze(1)
 
         # Channel embed same across (x,y) position, and pos embed same across channel (c)
+        # passing -1 means not changing size of that dimension
         channel_embed = channel_embed.expand(
             -1, -1, pos_embed.shape[2], -1
         )  # (1, c, L, cD)
