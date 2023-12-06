@@ -532,7 +532,7 @@ def validate_downstream(
             img_whole = batch["img"]
             label_whole = batch["label"]
 
-            if config.image_size != 64 and config.dataset in ["dfc", "worldcover"]:
+            if config.image_size != 64 and config.dataset in ["dfc", "worldcover", "hypso"]:
                 # validate each tile sub-patch
                 for x in range(0, 64, config.image_size - config.patch_sub):
                     for y in range(0, 64, config.image_size - config.patch_sub):
