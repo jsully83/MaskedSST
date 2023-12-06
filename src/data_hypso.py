@@ -135,6 +135,7 @@ class HypsoLabelTransform(object):
         super().__init__()
 
     def __call__(self, x):
-        # no changes to hypso
+        x[x == 0] = 0
+        x[x == 2] = 1
         x = torch.tensor(x, dtype=torch.long)
         return x

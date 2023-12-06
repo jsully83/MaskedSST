@@ -177,8 +177,18 @@ if __name__ == "__main__":
         for idx, batch in train_pbar:
             train_pbar.set_description(f"Training {step:,}")
 
-            img = batch["img"]
-            label = batch["label"]
+            if config.image_size != 64 and config.dataset in ["dfc", "enmap", "hypso"]:
+                # select a image_size**2 patch at random location of the tile
+                x, y = torch.randint(0, 64 - config.image_size, (2,))
+            else:
+                x, y = 0, 0
+
+            img = batch["img"][
+                :, :, x : x + config.image_size, y : y + config.image_size
+            ]
+            label = batch["label"][
+                :, x : x + config.image_size, y : y + config.image_size
+            ]
 
             loss, acc, macro_acc = train_step(
                 img, label, model, config, device, criterion, optimizer, acc_criterion

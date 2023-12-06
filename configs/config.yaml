@@ -16,8 +16,8 @@ data:
     remove_bands: []
     n_classes: 20
   hypso:
-    train_path: C:/Users/akuru/Documents/ECEE 7370 Advanced Comp Vision/sea_cloud_land/tiles
-    train_label_path: C:/Users/akuru/Documents/ECEE 7370 Advanced Comp Vision/sea_cloud_land/gt_tiles
+    train_path: /scratch/kurumunda.a/hypso/tiles
+    train_label_path: /scratch/kurumunda.a/hypso/gt_tiles
     n_bands: 120
     remove_bands: []
     n_classes: 2
