@@ -152,9 +152,7 @@ if __name__ == "__main__":
 
     dataloader, val_dataloader = get_supervised_data(config, device)
 
-    # model_path = "C:/Users/akuru/Documents/ECEE 7370 Advanced Comp Vision/final_project/MaskedSST/" + f"{config.run_id}/"
-    # os.mkdir(model_path)
-    os.mkdir(f"{config.run_id}/")
+    os.mkdir(f"models/{config.run_id}/")
 
     losses = []
     accs = []
